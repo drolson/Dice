@@ -5,17 +5,32 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 
 public class DiceActivity extends Activity {
 
 	int redDice = 2;
 	int whiteDice = 0;
 	
+	DiceBoard redBoard;
+	DiceBoard whiteBoard;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dice);
-               
+        
+        redBoard = new DiceBoard(this, 0);
+        redBoard.setDiceCount(redDice);
+        LinearLayout redB = (LinearLayout)this.findViewById(R.id.red_board);
+        redB.addView(redBoard);
+        redBoard.setOnClickListener(redBoard);
+        
+        whiteBoard = new DiceBoard(this, 1);
+        whiteBoard.setDiceCount(whiteDice);
+        LinearLayout whiteB = (LinearLayout)this.findViewById(R.id.white_board);
+        whiteB.addView(whiteBoard);
+        whiteBoard.setOnClickListener(whiteBoard);
     }
 
     @Override
@@ -40,6 +55,20 @@ public class DiceActivity extends Activity {
 	        	return true;
 	        default:
 	        	return super.onOptionsItemSelected(item);
+    	}
+    }
+    
+    @Override
+    public void onActivityResult(int request, int result, Intent i)
+    {
+    	System.out.println(request+" "+result);
+    	if (result == request) //then we can continue on
+    	{
+    		redDice = i.getExtras().getInt("red");
+    		redBoard.setDiceCount(redDice);
+    		
+    		whiteDice = i.getExtras().getInt("white");
+    		whiteBoard.setDiceCount(whiteDice);
     	}
     }
     
