@@ -1,0 +1,46 @@
+package com.drolson.dice;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+
+public class DiceActivity extends Activity {
+
+	int redDice = 2;
+	int whiteDice = 0;
+	
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_dice);
+               
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+    	super.onOptionsItemSelected(item);
+    	switch (item.getItemId()) 
+    	{
+	        case R.id.settings:
+	        	Intent intent = new Intent(this, SettingsActivity.class);
+	        	intent.putExtra("red", redDice);
+	        	intent.putExtra("white", whiteDice);
+	        	startActivityForResult(intent, 0);
+
+	        	return true;
+	        default:
+	        	return super.onOptionsItemSelected(item);
+    	}
+    }
+    
+}
