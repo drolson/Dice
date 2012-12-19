@@ -17,46 +17,39 @@ public class DiceBoard extends View implements OnClickListener
 	private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private Random rand = new Random();
 	private int diceCount = 0;
-	private int color;
+	Rect rect;
 	
-	Bitmap r1;
-	Bitmap r2;
-	Bitmap r3;
-	Bitmap r4;
-	Bitmap r5;
-	Bitmap r6;
-	
-	Bitmap w1;
-	Bitmap w2;
-	Bitmap w3;
-	Bitmap w4;
-	Bitmap w5;
-	Bitmap w6;
+	Bitmap b1;
+	Bitmap b2;
+	Bitmap b3;
+	Bitmap b4;
+	Bitmap b5;
+	Bitmap b6;
 	
 	public DiceBoard(Context context, int color) 
 	{
 		super(context);
 		
-		this.color = color;
-		
 		if (color == 0)
 		{
-			r1 = BitmapFactory.decodeResource(getResources(), R.drawable.red1);
-			r2 = BitmapFactory.decodeResource(getResources(), R.drawable.red2);
-			r3 = BitmapFactory.decodeResource(getResources(), R.drawable.red3);
-			r4 = BitmapFactory.decodeResource(getResources(), R.drawable.red4);
-			r5 = BitmapFactory.decodeResource(getResources(), R.drawable.red5);
-			r6 = BitmapFactory.decodeResource(getResources(), R.drawable.red6);
+			b1 = BitmapFactory.decodeResource(getResources(), R.drawable.red1);
+			b2 = BitmapFactory.decodeResource(getResources(), R.drawable.red2);
+			b3 = BitmapFactory.decodeResource(getResources(), R.drawable.red3);
+			b4 = BitmapFactory.decodeResource(getResources(), R.drawable.red4);
+			b5 = BitmapFactory.decodeResource(getResources(), R.drawable.red5);
+			b6 = BitmapFactory.decodeResource(getResources(), R.drawable.red6);
 		}
 		else if (color == 1)
 		{
-			w1 = BitmapFactory.decodeResource(getResources(), R.drawable.white1);
-			w2 = BitmapFactory.decodeResource(getResources(), R.drawable.white2);
-			w3 = BitmapFactory.decodeResource(getResources(), R.drawable.white3);
-			w4 = BitmapFactory.decodeResource(getResources(), R.drawable.white4);
-			w5 = BitmapFactory.decodeResource(getResources(), R.drawable.white5);
-			w6 = BitmapFactory.decodeResource(getResources(), R.drawable.white6);
-		}
+			b1 = BitmapFactory.decodeResource(getResources(), R.drawable.white1);
+			b2 = BitmapFactory.decodeResource(getResources(), R.drawable.white2);
+			b3 = BitmapFactory.decodeResource(getResources(), R.drawable.white3);
+			b4 = BitmapFactory.decodeResource(getResources(), R.drawable.white4);
+			b5 = BitmapFactory.decodeResource(getResources(), R.drawable.white5);
+			b6 = BitmapFactory.decodeResource(getResources(), R.drawable.white6);
+		}	
+		
+		System.out.println("height   " + this.getHeight());
 	}
 	
 	@Override
@@ -64,63 +57,43 @@ public class DiceBoard extends View implements OnClickListener
 	{
 	    super.onDraw(canvas);
 	    int temp;
-	    int count = -1;
-	    if (color == 0)
-		    for (int i = 0; i < diceCount; i++)
-		    {
-		    	temp = rand.nextInt(6) + 1;
-		    	switch (temp)
-		    	{
-		    	case 1:
-		    		canvas.drawBitmap(r1, 200+200*((count+1)%2), 200*((count+1)/2), paint);
-		    		break;
-		    	case 2:
-		    		canvas.drawBitmap(r2, 200+200*((count+1)%2), 200*((count+1)/2), paint);
-		    		break;
-		    	case 3:
-		    		canvas.drawBitmap(r3, 200+200*((count+1)%2), 200*((count+1)/2), paint);
-		    		break;
-		    	case 4:
-		    		canvas.drawBitmap(r4, 200+200*((count+1)%2), 200*((count+1)/2), paint);
-		    		break;
-		    	case 5:
-		    		canvas.drawBitmap(r5, 200+200*((count+1)%2), 200*((count+1)/2), paint);
-		    		break;
-		    	case 6:
-		    		canvas.drawBitmap(r6, 200+200*((count+1)%2), 200*((count+1)/2), paint);
-		    		break;
-		    	}
-		    	count++;
-		    }
-	    else if (color == 1)
-		    for (int i = 0; i < diceCount; i++)
-		    {
-		    	temp = rand.nextInt(6) + 1;
-		    	
-		    	switch (temp)
-		    	{
-		    	case 1:
-		    		//canvas.drawBitmap(w1, 200+200*((count+1)%2), 200*((count+1)/2), paint);
-		    		canvas.drawBitmap(w1, null, new Rect(0, 200, 200, 400), paint);
-		    		break;
-		    	case 2:
-		    		canvas.drawBitmap(w2, 200+200*((count+1)%2), 200*((count+1)/2), paint);
-		    		break;
-		    	case 3:
-		    		canvas.drawBitmap(w3, 200+200*((count+1)%2), 200*((count+1)/2), paint);
-		    		break;
-		    	case 4:
-		    		canvas.drawBitmap(w4, 200+200*((count+1)%2), 200*((count+1)/2), paint);
-		    		break;
-		    	case 5:
-		    		canvas.drawBitmap(w5, 200+200*((count+1)%2), 200*((count+1)/2), paint);
-		    		break;
-		    	case 6:
-		    		canvas.drawBitmap(w6, 200+200*((count+1)%2), 200*((count+1)/2), paint);
-		    		break;
-		    	}
-		    	count++;
-		    }
+	    //int count = -1;
+	    
+	    int width = this.getWidth() - 150; /* 150 for the margins */
+	    width = width/2; /* divide by two case we will have 2 per row*/
+	    
+	    int height = this.getHeight() - (50 + 50*((diceCount)/2)); /* 200 cause we have a possibility of having 3 rows for margins */
+	    height = height / 3; /* divide by 3 in case we have 3 rown */
+	    
+	    int size = Math.min(height, width);
+	    
+		for (int i = 0; i < diceCount; i++)
+		{
+		   	temp = rand.nextInt(6) + 1;
+		   	rect = new Rect(50+size*((i)%2), 50+size*((i)/2), 50+size+size*((i)%2), 50+size+size*((i)/2));
+		   	switch (temp)
+		   	{
+		   	case 1:
+		   		//canvas.drawBitmap(b1, 50+size*((count+1)%2), size*((count+1)/2), paint);
+		   		canvas.drawBitmap(b1, null, rect, paint);
+		   		break;
+		   	case 2:
+		   		canvas.drawBitmap(b2, null, rect, paint);
+		   		break;
+		   	case 3:
+		   		canvas.drawBitmap(b3, null, rect, paint);
+		   		break;
+		   	case 4:
+		   		canvas.drawBitmap(b4, null, rect, paint);
+		   		break;
+		   	case 5:
+		   		canvas.drawBitmap(b5, null, rect, paint);
+		   		break;
+		   	case 6:
+		   		canvas.drawBitmap(b6, null, rect, paint);
+		   		break;
+		 	}
+		}
 	}
 
 	@Override
