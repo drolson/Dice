@@ -18,6 +18,7 @@ public class DiceBoard extends View implements OnClickListener
 	private Random rand = new Random();
 	private int diceCount = 0;
 	Rect rect;
+	int min;
 	
 	Bitmap b1;
 	Bitmap b2;
@@ -49,62 +50,122 @@ public class DiceBoard extends View implements OnClickListener
 			b6 = BitmapFactory.decodeResource(getResources(), R.drawable.white6);
 		}	
 		
-		System.out.println("height   " + this.getHeight());
 	}
 	
 	@Override
 	protected void onDraw(Canvas canvas) 
 	{
 	    super.onDraw(canvas);
-	    int temp;
-	    //int count = -1;
 	    
-	    int width = this.getWidth() - 150; /* 150 for the margins */
-	    width = width/2; /* divide by two case we will have 2 per row*/
+	    int margin;
+	    int centerH = (int)(this.getHeight()*.5);	   
+	    int centerW = (int)(this.getWidth()*.5);
 	    
-	    int height = this.getHeight() - (50 + 50*((diceCount)/2)); /* 200 cause we have a possibility of having 3 rows for margins */
-	    height = height / 3; /* divide by 3 in case we have 3 rown */
+	    int centerW1 = (int)(this.getWidth()*.33);
+	    int centerW2 = (int)(this.getWidth()*.66);
 	    
-	    int size = Math.min(height, width);
+	    int centerH1 = (int)(this.getHeight()*.25);
+    	int centerH2 = (int)(this.getHeight()*.75);
+    	
+    	int centerH13 = (int)(this.getHeight()*.25);
+    	int centerH23 = (int)(this.getHeight()*.5);
+    	int centerH33 = (int)(this.getHeight()*.75);
 	    
-		for (int i = 0; i < diceCount; i++)
-		{
-		   	temp = rand.nextInt(6) + 1;
-		   	rect = new Rect(50+size*((i)%2), 50+size*((i)/2), 50+size+size*((i)%2), 50+size+size*((i)/2));
-		   	switch (temp)
-		   	{
-		   	case 1:
-		   		//canvas.drawBitmap(b1, 50+size*((count+1)%2), size*((count+1)/2), paint);
-		   		canvas.drawBitmap(b1, null, rect, paint);
-		   		break;
-		   	case 2:
-		   		canvas.drawBitmap(b2, null, rect, paint);
-		   		break;
-		   	case 3:
-		   		canvas.drawBitmap(b3, null, rect, paint);
-		   		break;
-		   	case 4:
-		   		canvas.drawBitmap(b4, null, rect, paint);
-		   		break;
-		   	case 5:
-		   		canvas.drawBitmap(b5, null, rect, paint);
-		   		break;
-		   	case 6:
-		   		canvas.drawBitmap(b6, null, rect, paint);
-		   		break;
-		 	}
-		}
+	    switch (diceCount)
+	    {
+	    case 1:
+	    	min = Math.min(this.getHeight(), this.getWidth());
+		    margin = (int)(min*.3);
+		    
+	    	rect = new Rect(centerW-margin, centerH-margin, centerW+margin, centerH+margin);
+	    	canvas.drawBitmap(getPicture(), null, rect, paint);
+	    	break;
+	    case 2:
+	    	 min = Math.min(this.getHeight(), this.getWidth()/2);
+	    	 margin = (int)(min*.3);
+	    	 rect = new Rect(centerW1-margin, centerH-margin, centerW1+margin, centerH+margin);
+	    	 canvas.drawBitmap(getPicture(), null, rect, paint);
+	    	 rect = new Rect(centerW2-margin, centerH-margin, centerW2+margin, centerH+margin);
+	    	 canvas.drawBitmap(getPicture(), null, rect, paint);
+	    	break;
+	    case 3:
+	    	min = Math.min(this.getHeight()/2,  this.getWidth()/2);
+	    	margin = (int)(min*.3);
+	    	
+	    	rect = new Rect(centerW1-margin, centerH1-margin, centerW1+margin, centerH1+margin);
+	    	canvas.drawBitmap(getPicture(), null, rect, paint);
+	    	rect = new Rect(centerW2-margin, centerH1-margin, centerW2+margin, centerH1+margin);
+	    	canvas.drawBitmap(getPicture(), null, rect, paint);
+	    	rect = new Rect(centerW-margin, centerH2-margin, centerW+margin, centerH2+margin);
+	    	canvas.drawBitmap(getPicture(), null, rect, paint);
+	    	break;
+	    case 4:
+	    	min = Math.min(this.getHeight()/2,  this.getWidth()/2);
+	    	margin = (int)(min*.3);
+	    	
+	    	rect = new Rect(centerW1-margin, centerH1-margin, centerW1+margin, centerH1+margin);
+	    	canvas.drawBitmap(getPicture(), null, rect, paint);
+	    	rect = new Rect(centerW2-margin, centerH1-margin, centerW2+margin, centerH1+margin);
+	    	canvas.drawBitmap(getPicture(), null, rect, paint);
+	    	
+	    	rect = new Rect(centerW1-margin, centerH2-margin, centerW1+margin, centerH2+margin);
+	    	canvas.drawBitmap(getPicture(), null, rect, paint);
+	    	rect = new Rect(centerW2-margin, centerH2-margin, centerW2+margin, centerH2+margin);
+	    	canvas.drawBitmap(getPicture(), null, rect, paint);
+	    	break;
+	    case 5:
+	    	min = Math.min(this.getHeight()/3, this.getWidth()/2);
+	    	margin = (int)(min*.3);
+	    	
+	    	rect = new Rect(centerW1-margin, centerH13-margin, centerW1+margin, centerH13+margin);
+	    	canvas.drawBitmap(getPicture(), null, rect, paint);
+	    	rect = new Rect(centerW2-margin, centerH13-margin, centerW2+margin, centerH13+margin);
+	    	canvas.drawBitmap(getPicture(), null, rect, paint);
+	    	
+	    	rect = new Rect(centerW-margin, centerH23-margin, centerW+margin, centerH23+margin);
+	    	canvas.drawBitmap(getPicture(), null, rect, paint);
+	    	
+	    	rect = new Rect(centerW1-margin, centerH33-margin, centerW1+margin, centerH33+margin);
+	    	canvas.drawBitmap(getPicture(), null, rect, paint);
+	    	rect = new Rect(centerW2-margin, centerH33-margin, centerW2+margin, centerH33+margin);
+	    	canvas.drawBitmap(getPicture(), null, rect, paint);
+
+	    	break;
+	    default:
+	    	break;
+	    }
 	}
 
 	@Override
 	public void onClick(View arg0) 
 	{
-		System.out.println("we got to here to invalidate and generate new numbers");
 		this.invalidate();
 	}
 
 	public void setDiceCount(int num)
 	{
 		diceCount = num;
+	}
+	
+	public Bitmap getPicture()
+	{
+		int i = rand.nextInt(6)+1;
+		switch(i)
+		{
+		case 1:
+			return b1;
+		case 2:
+			return b2;
+		case 3:
+			return b3;
+		case 4:
+			return b4;
+		case 5:
+			return b5;
+		case 6:
+			return b6;
+		default:
+			return null;
+		}
 	}
 }

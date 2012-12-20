@@ -61,14 +61,15 @@ public class DiceActivity extends Activity {
     @Override
     public void onActivityResult(int request, int result, Intent i)
     {
-    	System.out.println(request+" "+result);
     	if (result == request) //then we can continue on
     	{
     		redDice = i.getExtras().getInt("red");
     		redBoard.setDiceCount(redDice);
+    		redBoard.invalidate();
     		
     		whiteDice = i.getExtras().getInt("white");
     		whiteBoard.setDiceCount(whiteDice);
+    		whiteBoard.invalidate();
     	}
     }
     

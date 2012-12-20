@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 public class SettingsActivity extends Activity {
 
-//	SettingsActivity a = this;
 	Intent rc = new Intent();
 	public SeekBar sbRed;
 	public SeekBar sbWhite;
