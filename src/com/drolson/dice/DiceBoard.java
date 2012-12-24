@@ -17,7 +17,7 @@ public class DiceBoard extends View implements OnClickListener
 	private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private Random rand = new Random();
 	private int diceCount = 0;
-	Rect rect;
+	Rect rect = new Rect();
 	int min;
 	
 	Bitmap b1;
@@ -76,58 +76,118 @@ public class DiceBoard extends View implements OnClickListener
 	    case 1:
 	    	min = Math.min(this.getHeight(), this.getWidth());
 		    margin = (int)(min*.3);
-		    
-	    	rect = new Rect(centerW-margin, centerH-margin, centerW+margin, centerH+margin);
+
+	    	//rect = new Rect(centerW-margin, centerH-margin, centerW+margin, centerH+margin);
+		    rect.left = centerW-margin;
+		    rect.top = centerH-margin;
+		    rect.right = centerW+margin;
+		    rect.bottom = centerH+margin;
 	    	canvas.drawBitmap(getPicture(), null, rect, paint);
 	    	break;
 	    case 2:
 	    	 min = Math.min(this.getHeight(), this.getWidth()/2);
 	    	 margin = (int)(min*.3);
-	    	 rect = new Rect(centerW1-margin, centerH-margin, centerW1+margin, centerH+margin);
+	    	 //rect = new Rect(centerW1-margin, centerH-margin, centerW1+margin, centerH+margin);
+	    	 rect.left = centerW1-margin;
+			 rect.top = centerH-margin;
+			 rect.right = centerW1+margin;
+			 rect.bottom = centerH+margin;
 	    	 canvas.drawBitmap(getPicture(), null, rect, paint);
-	    	 rect = new Rect(centerW2-margin, centerH-margin, centerW2+margin, centerH+margin);
+	    	 //rect = new Rect(centerW2-margin, centerH-margin, centerW2+margin, centerH+margin);
+	    	 rect.left = centerW2-margin;
+			 rect.top = centerH-margin;
+			 rect.right = centerW2+margin;
+			 rect.bottom = centerH+margin;
 	    	 canvas.drawBitmap(getPicture(), null, rect, paint);
 	    	break;
 	    case 3:
 	    	min = Math.min(this.getHeight()/2,  this.getWidth()/2);
 	    	margin = (int)(min*.3);
 	    	
-	    	rect = new Rect(centerW1-margin, centerH1-margin, centerW1+margin, centerH1+margin);
+	    	//rect = new Rect(centerW1-margin, centerH1-margin, centerW1+margin, centerH1+margin);
+	    	rect.left = centerW1-margin;
+			rect.top = centerH1-margin;
+			rect.right = centerW1+margin;
+			rect.bottom = centerH1+margin;
 	    	canvas.drawBitmap(getPicture(), null, rect, paint);
-	    	rect = new Rect(centerW2-margin, centerH1-margin, centerW2+margin, centerH1+margin);
+	    	//rect = new Rect(centerW2-margin, centerH1-margin, centerW2+margin, centerH1+margin);
+	    	rect.left = centerW2-margin;
+	    	rect.top = centerH1-margin;
+			rect.right = centerW2+margin;
+			rect.bottom = centerH1+margin;
 	    	canvas.drawBitmap(getPicture(), null, rect, paint);
-	    	rect = new Rect(centerW-margin, centerH2-margin, centerW+margin, centerH2+margin);
+	    	//rect = new Rect(centerW-margin, centerH2-margin, centerW+margin, centerH2+margin);
+	    	rect.left = centerW-margin;
+	    	rect.top = centerH2-margin;
+			rect.right = centerW+margin;
+			rect.bottom = centerH2+margin;
 	    	canvas.drawBitmap(getPicture(), null, rect, paint);
 	    	break;
 	    case 4:
 	    	min = Math.min(this.getHeight()/2,  this.getWidth()/2);
 	    	margin = (int)(min*.3);
 	    	
-	    	rect = new Rect(centerW1-margin, centerH1-margin, centerW1+margin, centerH1+margin);
+	    	//rect = new Rect(centerW1-margin, centerH1-margin, centerW1+margin, centerH1+margin);
+	    	rect.left = centerW1-margin;
+	    	rect.top = centerH1-margin;
+			rect.right = centerW1+margin;
+			rect.bottom = centerH1+margin;
 	    	canvas.drawBitmap(getPicture(), null, rect, paint);
-	    	rect = new Rect(centerW2-margin, centerH1-margin, centerW2+margin, centerH1+margin);
+	    	//rect = new Rect(centerW2-margin, centerH1-margin, centerW2+margin, centerH1+margin);
+	    	rect.left = centerW2-margin;
+	    	rect.top = centerH1-margin;
+			rect.right = centerW2+margin;
+			rect.bottom = centerH1+margin;
 	    	canvas.drawBitmap(getPicture(), null, rect, paint);
 	    	
-	    	rect = new Rect(centerW1-margin, centerH2-margin, centerW1+margin, centerH2+margin);
+	    	//rect = new Rect(centerW1-margin, centerH2-margin, centerW1+margin, centerH2+margin);
+	    	rect.left = centerW1-margin;
+	    	rect.top = centerH2-margin;
+			rect.right = centerW1+margin;
+			rect.bottom = centerH2+margin;
 	    	canvas.drawBitmap(getPicture(), null, rect, paint);
-	    	rect = new Rect(centerW2-margin, centerH2-margin, centerW2+margin, centerH2+margin);
+	    	//rect = new Rect(centerW2-margin, centerH2-margin, centerW2+margin, centerH2+margin);
+	    	rect.left = centerW2-margin;
+	    	rect.top = centerH2-margin;
+			rect.right = centerW2+margin;
+			rect.bottom = centerH2+margin;
 	    	canvas.drawBitmap(getPicture(), null, rect, paint);
 	    	break;
 	    case 5:
 	    	min = Math.min(this.getHeight()/3, this.getWidth()/2);
 	    	margin = (int)(min*.3);
 	    	
-	    	rect = new Rect(centerW1-margin, centerH13-margin, centerW1+margin, centerH13+margin);
+	    	//rect = new Rect(centerW1-margin, centerH13-margin, centerW1+margin, centerH13+margin);
+	    	rect.left = centerW1-margin;
+	    	rect.top = centerH13-margin;
+			rect.right = centerW1+margin;
+			rect.bottom = centerH13+margin;
 	    	canvas.drawBitmap(getPicture(), null, rect, paint);
-	    	rect = new Rect(centerW2-margin, centerH13-margin, centerW2+margin, centerH13+margin);
+	    	//rect = new Rect(centerW2-margin, centerH13-margin, centerW2+margin, centerH13+margin);
+	    	rect.left = centerW2-margin;
+	    	rect.top = centerH13-margin;
+			rect.right = centerW2+margin;
+			rect.bottom = centerH13+margin;
 	    	canvas.drawBitmap(getPicture(), null, rect, paint);
 	    	
-	    	rect = new Rect(centerW-margin, centerH23-margin, centerW+margin, centerH23+margin);
+	    	//rect = new Rect(centerW-margin, centerH23-margin, centerW+margin, centerH23+margin);
+	    	rect.left = centerW-margin;
+	    	rect.top = centerH23-margin;
+			rect.right = centerW+margin;
+			rect.bottom = centerH23+margin;
 	    	canvas.drawBitmap(getPicture(), null, rect, paint);
 	    	
-	    	rect = new Rect(centerW1-margin, centerH33-margin, centerW1+margin, centerH33+margin);
+	    	//rect = new Rect(centerW1-margin, centerH33-margin, centerW1+margin, centerH33+margin);
+	    	rect.left = centerW1-margin;
+	    	rect.top = centerH33-margin;
+			rect.right = centerW1+margin;
+			rect.bottom = centerH33+margin;
 	    	canvas.drawBitmap(getPicture(), null, rect, paint);
-	    	rect = new Rect(centerW2-margin, centerH33-margin, centerW2+margin, centerH33+margin);
+	    	//rect = new Rect(centerW2-margin, centerH33-margin, centerW2+margin, centerH33+margin);
+	    	rect.left = centerW2-margin;
+	    	rect.top = centerH33-margin;
+			rect.right = centerW2+margin;
+			rect.bottom = centerH33+margin;
 	    	canvas.drawBitmap(getPicture(), null, rect, paint);
 
 	    	break;
