@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Dice</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="rolldice">Double-tap to roll dice</string>
+    <string name="red_dice_count">Red Dice?</string>
+    <string name="white_dice_count">White Dice?</string>
+
+</resources>
