@@ -1,6 +1,5 @@
 package com.drolson.dice;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import android.content.Context;
@@ -17,24 +16,28 @@ import android.view.View.OnClickListener;
 public class DiceBoard extends View implements OnClickListener
 {
 
-	private static final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+	private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private Random rand = new Random();
+	
 	private int diceCount = 0;
-	Rect rect = new Rect();
-	static int [][] area = new int[5][4];
-	public static ArrayList<Integer> dice = new ArrayList<Integer>();
-	static boolean [] diceSelected = new boolean[5];
+	private Rect rect = new Rect();
+	
+	private int [][] area = new int[DiceActivity.maxValue][4];
+	private int [] dice = new int[DiceActivity.maxValue];
+	private boolean [] selectedDice = new boolean[DiceActivity.maxValue];
+	
+	
 	int min;
 	int random;
 	boolean clickedDice = false;
 	int clickedDiceNum = -1;
 	
-	Bitmap b1;
-	Bitmap b2;
-	Bitmap b3;
-	Bitmap b4;
-	Bitmap b5;
-	Bitmap b6;
+	private Bitmap b1;
+	private Bitmap b2;
+	private Bitmap b3;
+	private Bitmap b4;
+	private Bitmap b5;
+	private Bitmap b6;
 	
 	public DiceBoard(Context context, int color) 
 	{
@@ -48,6 +51,8 @@ public class DiceBoard extends View implements OnClickListener
 			b4 = BitmapFactory.decodeResource(getResources(), R.drawable.red4);
 			b5 = BitmapFactory.decodeResource(getResources(), R.drawable.red5);
 			b6 = BitmapFactory.decodeResource(getResources(), R.drawable.red6);
+			
+			paint.setColor(Color.WHITE);
 		}
 		else if (color == 1)
 		{
@@ -57,8 +62,11 @@ public class DiceBoard extends View implements OnClickListener
 			b4 = BitmapFactory.decodeResource(getResources(), R.drawable.white4);
 			b5 = BitmapFactory.decodeResource(getResources(), R.drawable.white5);
 			b6 = BitmapFactory.decodeResource(getResources(), R.drawable.white6);
-		}	
+			
+			paint.setColor(Color.RED);
+		}
 		
+		clear();
 	}
 	
 	@Override
@@ -66,6 +74,7 @@ public class DiceBoard extends View implements OnClickListener
 	{
 	    super.onDraw(canvas);
 	    
+	        
 	    int margin;
 	    int centerH = (int)(this.getHeight()*.5);	   
 	    int centerW = (int)(this.getWidth()*.5);
@@ -80,10 +89,11 @@ public class DiceBoard extends View implements OnClickListener
     	int centerH23 = (int)(this.getHeight()*.5);
     	int centerH33 = (int)(this.getHeight()*.75);
 	    
-    	paint.setColor(Color.GREEN);
-    	for (int i = 0; i < diceSelected.length; i++)
+    	
+    	//loop through all the dice and see if we need to highlight the die
+    	for (int i = 0; i < selectedDice.length; i++)
     	{
-    		if (diceSelected[i])
+    		if (selectedDice[i])
     		{
     			rect.left = area[i][0]-3;
     	   		rect.top = area[i][1]-3;
@@ -92,138 +102,176 @@ public class DiceBoard extends View implements OnClickListener
     	   		canvas.drawRect(rect, paint);
     		}
     	}
-      		for (int i = 0; i < dice.size(); i++)
+    	
+    	//loop through all the dice and redraw
+      	for (int i = 0; i < dice.length; i++)
    		{
-   			rect.left = area[i][0];
-   			rect.top = area[i][1];
-       		rect.right = area[i][2];
-       		rect.bottom = area[i][3];
-       		canvas.drawBitmap(getPicture(dice.get(i)), null, rect, paint);
+      		if (dice[i] > 0)
+      		{
+	   			rect.left = area[i][0];
+	   			rect.top = area[i][1];
+	       		rect.right = area[i][2];
+	       		rect.bottom = area[i][3];
+	       		canvas.drawBitmap(getPicture(dice[i], i), null, rect, paint);
+      		}
    		}
-   		clickedDice = false;
-   		clear(); //clears all rect values that we saved
-  
-      	switch (diceCount)
-	    {
-	    case 1:
-	    	min = Math.min(this.getHeight(), this.getWidth());
-		    margin = (int)(min*.3);
-			    	//rect = new Rect(centerW-margin, centerH-margin, centerW+margin, centerH+margin);
-		    area[0][0] = rect.left = centerW-margin;
-		    area[0][1] = rect.top = centerH-margin;
-		    area[0][2] = rect.right = centerW+margin;
-		    area[0][3] = rect.bottom = centerH+margin;
-	    	canvas.drawBitmap(getPicture(-1), null, rect, paint);
-	    	break;
-	    case 2:
-	    	 min = Math.min(this.getHeight(), this.getWidth()/2);
-	    	 margin = (int)(min*.3);
-	    	 //rect = new Rect(centerW1-margin, centerH-margin, centerW1+margin, centerH+margin);
-	    	 area[0][0] = rect.left = centerW1-margin;
-	    	 area[0][1] = rect.top = centerH-margin;
-	    	 area[0][2] = rect.right = centerW1+margin;
-	    	 area[0][3] = rect.bottom = centerH+margin;
-	    	 canvas.drawBitmap(getPicture(-1), null, rect, paint);
-	    	 //rect = new Rect(centerW2-margin, centerH-margin, centerW2+margin, centerH+margin);
-	    	 area[1][0] = rect.left = centerW2-margin;
-	    	 area[1][1] = rect.top = centerH-margin;
-	    	 area[1][2] = rect.right = centerW2+margin;
-	    	 area[1][3] = rect.bottom = centerH+margin;
-	    	 canvas.drawBitmap(getPicture(-1), null, rect, paint);
-	    	break;
-	    case 3:
-	    	min = Math.min(this.getHeight()/2,  this.getWidth()/2);
-	    	margin = (int)(min*.3);
-	    	
-	    	//rect = new Rect(centerW1-margin, centerH1-margin, centerW1+margin, centerH1+margin);
-	    	area[0][0] = rect.left = centerW1-margin;
-	    	area[0][1] = rect.top = centerH1-margin;
-	    	area[0][2] = rect.right = centerW1+margin;
-	    	area[0][3] = rect.bottom = centerH1+margin;
-	    	canvas.drawBitmap(getPicture(-1), null, rect, paint);
-	    	//rect = new Rect(centerW2-margin, centerH1-margin, centerW2+margin, centerH1+margin);
-	    	area[1][0] = rect.left = centerW2-margin;
-	    	area[1][1] = rect.top = centerH1-margin;
-	    	area[1][2] = rect.right = centerW2+margin;
-	    	area[1][3] = rect.bottom = centerH1+margin;
-	    	canvas.drawBitmap(getPicture(-1), null, rect, paint);
-	    	//rect = new Rect(centerW-margin, centerH2-margin, centerW+margin, centerH2+margin);
-	    	area[2][0] = rect.left = centerW-margin;
-	    	area[2][1] = rect.top = centerH2-margin;
-	    	area[2][2] = rect.right = centerW+margin;
-	    	area[2][3] = rect.bottom = centerH2+margin;
-	    	canvas.drawBitmap(getPicture(-1), null, rect, paint);
-	    	break;
-	    case 4:
-	    	min = Math.min(this.getHeight()/2,  this.getWidth()/2);
-	    	margin = (int)(min*.3);
-	    	
-	    	//rect = new Rect(centerW1-margin, centerH1-margin, centerW1+margin, centerH1+margin);
-	    	area[0][0] = rect.left = centerW1-margin;
-	    	area[0][1] = rect.top = centerH1-margin;
-	    	area[0][2] = rect.right = centerW1+margin;
-	    	area[0][3] = rect.bottom = centerH1+margin;
-	    	canvas.drawBitmap(getPicture(-1), null, rect, paint);
-	    	//rect = new Rect(centerW2-margin, centerH1-margin, centerW2+margin, centerH1+margin);
-	    	area[1][0] = rect.left = centerW2-margin;
-	    	area[1][1] = rect.top = centerH1-margin;
-	    	area[1][2] = rect.right = centerW2+margin;
-	    	area[1][3] = rect.bottom = centerH1+margin;
-	    	canvas.drawBitmap(getPicture(-1), null, rect, paint);
-	    	
-	    	//rect = new Rect(centerW1-margin, centerH2-margin, centerW1+margin, centerH2+margin);
-	    	area[2][0] = rect.left = centerW1-margin;
-	    	area[2][1] = rect.top = centerH2-margin;
-	    	area[2][2] = rect.right = centerW1+margin;
-	    	area[2][3] = rect.bottom = centerH2+margin;
-	    	canvas.drawBitmap(getPicture(-1), null, rect, paint);
-	    	//rect = new Rect(centerW2-margin, centerH2-margin, centerW2+margin, centerH2+margin);
-	    	area[3][0] = rect.left = centerW2-margin;
-	    	area[3][1] = rect.top = centerH2-margin;
-	    	area[3][2] = rect.right = centerW2+margin;
-	    	area[3][3] = rect.bottom = centerH2+margin;
-	    	canvas.drawBitmap(getPicture(-1), null, rect, paint);
-	    	break;
-	    case 5:
-	    	min = Math.min(this.getHeight()/3, this.getWidth()/2);
-	    	margin = (int)(min*.3);
-	    	
-	    	//rect = new Rect(centerW1-margin, centerH13-margin, centerW1+margin, centerH13+margin);
-	    	area[0][0] = rect.left = centerW1-margin;
-	    	area[0][1] = rect.top = centerH13-margin;
-	    	area[0][2] = rect.right = centerW1+margin;
-	    	area[0][3] = rect.bottom = centerH13+margin;
-	    	canvas.drawBitmap(getPicture(-1), null, rect, paint);
-	    	//rect = new Rect(centerW2-margin, centerH13-margin, centerW2+margin, centerH13+margin);
-	    	area[1][0] = rect.left = centerW2-margin;
-	    	area[1][1] = rect.top = centerH13-margin;
-	    	area[1][2] = rect.right = centerW2+margin;
-	    	area[1][3] = rect.bottom = centerH13+margin;
-	    	canvas.drawBitmap(getPicture(-1), null, rect, paint);
-	    	
-	    	//rect = new Rect(centerW-margin, centerH23-margin, centerW+margin, centerH23+margin);
-	    	area[2][0] = rect.left = centerW-margin;
-	    	area[2][1] = rect.top = centerH23-margin;
-	    	area[2][2] = rect.right = centerW+margin;
-	    	area[2][3] = rect.bottom = centerH23+margin;
-	    	canvas.drawBitmap(getPicture(-1), null, rect, paint);
-	    	
-	    	//rect = new Rect(centerW1-margin, centerH33-margin, centerW1+margin, centerH33+margin);
-	    	area[3][0] = rect.left = centerW1-margin;
-	    	area[3][1] = rect.top = centerH33-margin;
-	    	area[3][2] = rect.right = centerW1+margin;
-	    	area[3][3] = rect.bottom = centerH33+margin;
-	    	canvas.drawBitmap(getPicture(-1), null, rect, paint);
-	    	//rect = new Rect(centerW2-margin, centerH33-margin, centerW2+margin, centerH33+margin);
-	    	area[4][0] = rect.left = centerW2-margin;
-	    	area[4][1] = rect.top = centerH33-margin;
-	    	area[4][2] = rect.right = centerW2+margin;
-	    	area[4][3] = rect.bottom = centerH33+margin;
-	    	canvas.drawBitmap(getPicture(-1), null, rect, paint);
-			    	break;
-	    default:
-	    	break;
-	    }
+	   		
+    	
+   		if (!clickedDice)
+   		{
+	    	switch (diceCount)
+		    {
+		    case 1:
+		    	min = Math.min(this.getHeight(), this.getWidth());
+			    margin = (int)(min*.3);
+				    	//rect = new Rect(centerW-margin, centerH-margin, centerW+margin, centerH+margin);
+			    if (!selectedDice[0])
+			    {
+				    area[0][0] = rect.left = centerW-margin;
+				    area[0][1] = rect.top = centerH-margin;
+				    area[0][2] = rect.right = centerW+margin;
+				    area[0][3] = rect.bottom = centerH+margin;
+				    canvas.drawBitmap(getPicture(-1, 0), null, rect, paint);
+			    }
+			    
+		    	break;
+		    case 2:
+		    	 min = Math.min(this.getHeight(), this.getWidth()/2);
+		    	 margin = (int)(min*.3);
+		    	 
+		    	 if (!selectedDice[0])
+		    	 {
+			    	 area[0][0] = rect.left = centerW1-margin;
+			    	 area[0][1] = rect.top = centerH-margin;
+			    	 area[0][2] = rect.right = centerW1+margin;
+			    	 area[0][3] = rect.bottom = centerH+margin;
+			    	 canvas.drawBitmap(getPicture(-1, 0), null, rect, paint);
+		    	 }
+		    	 if (!selectedDice[1])
+		    	 {
+			    	 area[1][0] = rect.left = centerW2-margin;
+			    	 area[1][1] = rect.top = centerH-margin;
+			    	 area[1][2] = rect.right = centerW2+margin;
+			    	 area[1][3] = rect.bottom = centerH+margin;
+			    	 canvas.drawBitmap(getPicture(-1, 1), null, rect, paint);
+		    	 }
+		    	break;
+		    case 3:
+		    	min = Math.min(this.getHeight()/2,  this.getWidth()/2);
+		    	margin = (int)(min*.3);
+		    	
+		    	if (!selectedDice[0])
+		    	{
+			    	area[0][0] = rect.left = centerW1-margin;
+			    	area[0][1] = rect.top = centerH1-margin;
+			    	area[0][2] = rect.right = centerW1+margin;
+			    	area[0][3] = rect.bottom = centerH1+margin;
+			    	canvas.drawBitmap(getPicture(-1, 0), null, rect, paint);
+		    	}
+		    	if (!selectedDice[1])
+		    	{
+		    		area[1][0] = rect.left = centerW2-margin;
+		    		area[1][1] = rect.top = centerH1-margin;
+			    	area[1][2] = rect.right = centerW2+margin;
+			    	area[1][3] = rect.bottom = centerH1+margin;
+			    	canvas.drawBitmap(getPicture(-1, 1), null, rect, paint);
+		    	}
+		    	
+		    	if (!selectedDice[2])
+		    	{
+			    	area[2][0] = rect.left = centerW-margin;
+			    	area[2][1] = rect.top = centerH2-margin;
+			    	area[2][2] = rect.right = centerW+margin;
+			    	area[2][3] = rect.bottom = centerH2+margin;
+			    	canvas.drawBitmap(getPicture(-1, 2), null, rect, paint);
+		    	}
+		    	break;
+		    case 4:
+		    	min = Math.min(this.getHeight()/2,  this.getWidth()/2);
+		    	margin = (int)(min*.3);
+		    	
+		    	if (!selectedDice[0])
+		    	{
+			    	area[0][0] = rect.left = centerW1-margin;
+			    	area[0][1] = rect.top = centerH1-margin;
+			    	area[0][2] = rect.right = centerW1+margin;
+			    	area[0][3] = rect.bottom = centerH1+margin;
+			    	canvas.drawBitmap(getPicture(-1, 0), null, rect, paint);
+		    	}
+		    	if (!selectedDice[1])
+		    	{
+			    	area[1][0] = rect.left = centerW2-margin;
+			    	area[1][1] = rect.top = centerH1-margin;
+			    	area[1][2] = rect.right = centerW2+margin;
+			    	area[1][3] = rect.bottom = centerH1+margin;
+			    	canvas.drawBitmap(getPicture(-1, 1), null, rect, paint);
+		    	}
+		    	if (!selectedDice[2])
+		    	{
+			    	area[2][0] = rect.left = centerW1-margin;
+			    	area[2][1] = rect.top = centerH2-margin;
+			    	area[2][2] = rect.right = centerW1+margin;
+			    	area[2][3] = rect.bottom = centerH2+margin;
+			    	canvas.drawBitmap(getPicture(-1, 2), null, rect, paint);
+		    	}
+		    	if (!selectedDice[3])
+		    	{
+			    	area[3][0] = rect.left = centerW2-margin;
+			    	area[3][1] = rect.top = centerH2-margin;
+			    	area[3][2] = rect.right = centerW2+margin;
+			    	area[3][3] = rect.bottom = centerH2+margin;
+			    	canvas.drawBitmap(getPicture(-1, 3), null, rect, paint);
+		    	}
+		    	break;
+		    case 5:
+		    	min = Math.min(this.getHeight()/3, this.getWidth()/2);
+		    	margin = (int)(min*.3);
+		    	
+		    	if (!selectedDice[0])
+		    	{
+			    	area[0][0] = rect.left = centerW1-margin;
+			    	area[0][1] = rect.top = centerH13-margin;
+			    	area[0][2] = rect.right = centerW1+margin;
+			    	area[0][3] = rect.bottom = centerH13+margin;
+			    	canvas.drawBitmap(getPicture(-1, 0), null, rect, paint);
+		    	}
+		    	if (!selectedDice[1])
+		    	{
+			    	area[1][0] = rect.left = centerW2-margin;
+			    	area[1][1] = rect.top = centerH13-margin;
+			    	area[1][2] = rect.right = centerW2+margin;
+			    	area[1][3] = rect.bottom = centerH13+margin;
+			    	canvas.drawBitmap(getPicture(-1, 1), null, rect, paint);
+		    	}
+		    	if (!selectedDice[2])
+		    	{
+			    	area[2][0] = rect.left = centerW-margin;
+			    	area[2][1] = rect.top = centerH23-margin;
+			    	area[2][2] = rect.right = centerW+margin;
+			    	area[2][3] = rect.bottom = centerH23+margin;
+			    	canvas.drawBitmap(getPicture(-1, 2), null, rect, paint);
+		    	}
+		    	if (!selectedDice[3])
+		    	{
+			    	area[3][0] = rect.left = centerW1-margin;
+			    	area[3][1] = rect.top = centerH33-margin;
+			    	area[3][2] = rect.right = centerW1+margin;
+			    	area[3][3] = rect.bottom = centerH33+margin;
+			    	canvas.drawBitmap(getPicture(-1, 3), null, rect, paint);
+		    	}
+		    	if (!selectedDice[4])
+		    	{
+			    	area[4][0] = rect.left = centerW2-margin;
+			    	area[4][1] = rect.top = centerH33-margin;
+			    	area[4][2] = rect.right = centerW2+margin;
+			    	area[4][3] = rect.bottom = centerH33+margin;
+			    	canvas.drawBitmap(getPicture(-1, 4), null, rect, paint);
+		    	}
+				    	break;
+		    default:
+		    	break;
+		    }
+   		}
     }
 	
 	
@@ -237,21 +285,23 @@ public class DiceBoard extends View implements OnClickListener
 	{
 		float x = me.getX();
 		float y = me.getY();
-		//System.out.println(me.getX());
-		//System.out.println(me.getY());
+		
 		if (me.getAction() == MotionEvent.ACTION_UP)
 		{
 			for (int i = 0; i < area.length; i++)
 			{
 				if (x >= area[i][0] && x <= area[i][2] && y >= area[i][1] && y <= area[i][3])
 				{
-					if (diceSelected[i])
-						diceSelected[i] = false;
+					if (selectedDice[i])
+						selectedDice[i] = false;
 					else
-						diceSelected[i] = true;
+						selectedDice[i] = true;
 					clickedDice = true;
-					System.out.println("Clicked a dice");
+					//we can safely break out since you can only select one dice at a time
+					break;
 				}
+				else
+					clickedDice = false;
 			}
 			this.invalidate();
 		}
@@ -262,14 +312,17 @@ public class DiceBoard extends View implements OnClickListener
 	public void setDiceCount(int num)
 	{
 		diceCount = num;
+		clear();
+		this.invalidate();
 	}
 	
-	public Bitmap getPicture(int i)
+	public Bitmap getPicture(int i, int location)
 	{
 		if (i < 0)
 		{
 			random = rand.nextInt(6)+1;
-			dice.add(random);
+
+			dice[location] = random;
 		}
 		else
 			random = i;
@@ -293,13 +346,19 @@ public class DiceBoard extends View implements OnClickListener
 		}
 	}
 	
-	private static void clear()
+	private void clear()
 	{
 		for (int i = 0; i < area.length; i++)
 		{
-			for (int j = 0; j < area[0].length; j++)
-				area[i][j] = -1;
+			area[i][0] = -1;
+			area[i][1] = -1;
+			area[i][2] = -1;
+			area[i][3] = -1;
+		
+			dice[i] = -1;
+			
+			selectedDice[i] = false;
 		}
-		dice.clear();
+		clickedDice = false;
 	}
 }
